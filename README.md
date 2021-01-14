@@ -80,9 +80,54 @@ function addAnother(z) {
 ```
 
 By doing that (it's currying but not the main purpose of it is used there), we reduce the area
-where z assignement can occur (compared to the exemple above), increasing readability, if `z` 
+where z assignement can occur (compared to the exemple above), increasing readability, if `z`
 is passed as 1, it will stay 1.
 
 ***
 
 ## Same input, same output
+
+A pure function, **give an input, produces the same output** (if an **object** is passed, an **object** is returned)
+
+## Level of confidence
+
+Using functions calls as pure as possible makes you being more confident on the code you reading.
+
+## Extracting impurity
+
+If a functions is impure, just extract the impure part into a procedure so these 2 behaviors can be distinct
+
+from:
+
+```javascript
+function addComment(userId, comment) {
+  var record = {
+    id: uniqueId(),
+    userId,
+    text: comment,
+  }
+
+  var el = buildCommentElement(record)
+  commentsList.appendChild(elem)
+}
+
+addComment(42, 'A comment')
+
+```
+to: 
+
+```javascript
+function newComment(userId, commentId, comment) {
+  var record = {
+    id: commentId,
+    userId,
+    text: comment,
+  }
+
+  return buildCommentElement(record)
+}
+
+var commentId = uniqueId()
+var elem = newComment(42, commentId, 'a comment')
+commentsList.appendChild(elem)
+```

@@ -15,3 +15,16 @@ function addAnother(x, y) {
 }
 
 addAnother(20, 21)
+
+function addComment(userId, comment) {
+  var record = {
+    id: uniqueId(),
+    userId,
+    text: comment,
+  }
+
+  var el = buildCommentElement(record)
+  commentsList.appendChild(elem)
+}
+
+addComment(42, 'A comment')
