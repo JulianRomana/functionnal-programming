@@ -9,6 +9,7 @@
 Funcionnal programming is a way to approach code, a declarative one.
 
 This pattern has been designed to make certain bugs impossible to happend.
+
 #### Imperative code
 
 > Imperative code is focused on how to do something.
@@ -50,7 +51,6 @@ Bugs are more likely to come where you have side effets.
 (more precise definition below)
 
 > A **pure function** call is pure if it has referential transparency. Meaning that if you replace the function call by the value that it returns, it should'nt break the program. If you see a function that has the same input, you will have the confidence that it will produce the same output.
-
 
 Using an outter variable, without mutating it, in a function still makes it **pure**.The only goal is 
 that it should be obvious for the code reader. He needs to not be worried that the outter variable will change.
@@ -186,8 +186,6 @@ function sum(x, y) {
 
 Takes more than 2 inputs, pretty uncommun in function programming
 
-
-
 ## Adapters
 
 ### High order functions
@@ -208,7 +206,7 @@ function unary(fn) {
 function f(...args) {
   return args
 }
-  
+
 
 const un = unary(f)
 
@@ -216,19 +214,13 @@ un(1,2,3,4)// [1]
 f(1,2,3,4)// [1,2,3,4]
 ```
 
-
-
 Shape adapters are used to transform functions's shape.
 
 The function `f` originally takes several parameters (enary function) and returns them.
 If we want to make this function an `unary` function, we create a shape adapter (called unary on the example above). This function will take the original `f` function, and will return an other function which will take a single parameter and return the result of the call of the `f` function in which we passed the single parameter.
 By doing so, we can pass as many arguments as we want, the `f` function will only be called with one parameter, and is transformed to an unary function
 
-
-
 Same can be done to transform an unary function to a binary one.
-
-
 
 If your functions don't work well together this is what you should think about doing (in order): 
 
@@ -238,11 +230,7 @@ if not:
 
 - Can I make an adapter so it changes the shape ?
 
-
-
 The functional programmer sees code as lego pieces. He tries to make them fit together. Try to use function as familiar as possible.
-
-
 
 ### Flip and reverse adapter
 
@@ -258,7 +246,7 @@ function flip(fn) {
 function f(...args) {
   return args
 }
-  
+
 
 const g = flip(f)
 
@@ -266,8 +254,6 @@ g(1,2,3,4) // 2,1,3,4
 ```
 
 The name `flip` for this function is canonical and common to all functional programming projects. It will always mean that the value returned has transposed the 2 arguments.
-
-
 
 Reverse function reverses all the arguments
 
@@ -281,7 +267,7 @@ function reverseArgs(fn) {
 function f(...args) {
   return args
 }
-  
+
 
 const g = reverseArgs(f)
 
@@ -300,13 +286,11 @@ function spreadArgs(fn) {
 function f(x, y, z) {
   return x + y + z
 }
-  
+
 const g = spreadArgs(f)
 
 g([1,2,3]) // 6
 ```
-
-
 
 The `apply` method in native javascript takes an array and apply them into single arguments to a function.
 
@@ -321,8 +305,6 @@ function spreadArgs(fn) {
   }
 }
 ```
-
-
 
 ## Point free
 
@@ -366,8 +348,6 @@ to:
 getPerson(fetchPerson)
 ```
 
-
-
 ### Point free refactor
 
 ```js
@@ -385,13 +365,9 @@ isEven(4) // true
 What are the benefits of the `isEven` function ?
 It creates a direct visible relationship with `isOdd`. Instead, if we used `nb % 2 == 0`, the relationship would exist but it wouldn't be as obvious.
 
-
-
 Sometimes in functional programming, it will be better to be repetitive.
 
 As a functional programmer, when you have these kinda use case, you should ask yourself, **can this be done in a point free way ?** Can we define the `isEven` function without to have the `nb` parameter.
-
-
 
 The goal of point free is to remove the declarative style of the function.
 
@@ -399,17 +375,11 @@ Declarative code is implicit.
 
 Imperative code is explicit.
 
-
-
 People would usually say that explicit code is better, but in some senses,  being implicit allows us to handle unnecessary details, allowing better readability.
 
 `isEven` is basically the negate version of `isOdd`.
 
-
-
 To do so, we are going to create a utility that will adapt the shape of the function.
-
-
 
 Let's create a very famous high order function called `not`
 
@@ -437,8 +407,6 @@ Check exercise in folder `point-free`
 
 > When trying to refactor or code in functional programming, think about point freeing and equation reasoning
 
-
-
 ### Advanced Point free
 
 ```js
@@ -463,13 +431,9 @@ function isOdd(x) {
 }
 ```
 
-
-
 This is halfway an `isOdd` function using only functions and point-free techniques.
 
 `eq1(mod2(x))`. This is called **composition**. The output of the `mod2` call, is directly passed into the `eq1` call.
-
-
 
 To transform the code above into a fully point-free **isOdd** function, we can create an compose function
 
@@ -490,11 +454,7 @@ function compose(fn2, fn1) {
 const isOdd = compose(eq1, mod2)
 ```
 
-
-
 We can clearly see that the shape of the `composed` function is the same as the `isOdd` function. So they are interchangeable. Which means that in the end, our code will look like.
-
-
 
 ```js
 function mod(y) {
@@ -541,7 +501,10 @@ The c function is `closing over the counter variable`, remembers it and can incr
 
 If you are going to use closure in functional programming, close over non changing values. If you mutate values that you are closed over, side effects will happend.
 
-### Lazy vs Eager 
+### 
+
+### Lazy vs Eager
+
 ```js
 function repeater(count) {
   return function allTheAs() {
@@ -568,10 +531,14 @@ function repeater(count) {
 const A = repeater(3)
 A() // 'AAA'
 ```
+
 This function is called Earger. The `padStart`, method is called when `repeater` is called. Thanks to closure, is we call `A` multiple times, it will only execute the `padStart` method once, now matter how many times we call the `A` function.
 The downside is, if this function never gets called, the `padStart` method would have been called, imagine with a heavy function...
 
+### 
+
 ### Memoize
+
 What if we want a function that's called several times but with, most of the time, the same input given ?
 
 ```js
@@ -585,6 +552,7 @@ function repeater(count) {
   }
 }
 ```
+
 This function is eager and lazy at the same time. By putting in memory the str, it allows us to use both benefits of earger functions and lazy functions.
 The problem is that, it's is an impure function (we closing over variable that is getting reassigned), but it produces a pure function call. This should'nt be used in functionnal programming.
 
@@ -597,9 +565,12 @@ function repeater(count) {
   })
 }
 ```
+
 It basically takes your function as a callback, caches the input once it's called, if a different input is given, it will recall the provided callback, either way, it will just return the cached value that has already been produced by the callback function.
 
 It is much more obviously pure, but under the hood, it kinda does the same as the first example.
+
+### 
 
 ### Generalized functions to Specialized functions
 
@@ -634,6 +605,7 @@ function getCurrentUser(cb) {
 
 getCurrentUser(renderCustomer)
 ```
+
 We could have just declared the `getCurrentUser` with the `ajax` function, but using the intermediate `getCustomer` function creates a clear relationship.
 
 > `getCurrentUser` is the specialization of `getCustomer`
@@ -650,14 +622,15 @@ Parameters should always be passed from the more general, to the more specific.
 
 - `map(callback, array)` (ramda's map)
 
-
 Why ? Usually when you write a function, you will use the more general values passed in first.
 In every functional programming library you will encounter this kind of behavior.
 
+### 
 
 ### Partial application - Currying
 
 #### Partial application
+
 In every functional programming library, you will find a utility called `partial`.
 
 ```js
@@ -669,9 +642,9 @@ const getCurrentUser = partial(getCustomer, { id: 911 })
 getCustomer({id: 911}, renderCustomer)
 getCurrentUser(renderCustomer)
 ```
+
 The purpose of the `partial` utility is that you create partial applications by specifiying the arguments that will be passed to the function.
 On the `getCustomer` declaration, we provide the `CUSTOMER_API` to the `ajax` function, so this first parameter will already be specified.
-
 
 #### Currying
 
@@ -680,7 +653,7 @@ Currying is the more common technique for function specialization.
 ```js
 function ajax(url) {
   return function getData(data) {
-    return functin getCB(cb) {...}
+    return function getCB(cb) {...}
   }
 }
 ajax(CUSTOMER_API)({ id: 911 })(renderCustomer)
@@ -690,6 +663,7 @@ const getCurrentUser = getCustomer({ id: 911 })
 ```
 
 It exists a utility that does currying for us.
+
 ```js
 const ajax = curry(
   3,
@@ -698,3 +672,85 @@ const ajax = curry(
 const getCustomer = ajax(CUSTOMER_API)
 const getCurrentUser = getCustomer({ id: 911 })
 ```
+
+#### Partial application vs Currying
+
+- Both are specialization techniques
+
+- Partial application presets some arguments now, receives the rest on the next call
+
+- Currying doesn't presets any arguments, receives each arguments one at the time
+
+## Composition
+
+**Composition** is basically using the output of a function as the input of an other function.
+
+```js
+function minus2(x) { return x - 2 }
+function triple(x) { return x * 3 }
+function increment(x) { return x + 1 }
+
+
+totalCost = basePrice + minus2(triple(increment(4)))
+```
+
+Allows us to not use temp variable to store the data. These would just make the code unreadable.
+
+To add maintainablity, we can create a function that will describe what it's happening
+this is called an **abstraction**
+
+```js
+function minus2(x) { return x - 2 }
+function triple(x) { return x * 3 }
+function increment(x) { return x + 1 }
+
+function shippingRate(x){
+  return minus2(triple(increment(x)))
+}
+
+totalCost = basePrice + shippingRate(4)
+```
+
+## Immutability
+
+Immutability isn't `things that can't change` it's more `things don't change unexpectedly.
+
+
+
+There are 2 big problems that we face when we want to do immutability: 
+
+- Assignment immutability
+
+- Value immutability
+
+
+
+99 % of the time the problem that we will face will be `Value immutability`
+
+### Assignment immutability
+
+`When you assign something to a variable, it can no longer allow to be reassigned to some other value. `
+
+
+
+### Value immutability
+
+Value immutability is when a property of an object or a value in an array don't change.
+
+
+
+To achieve that goal we have the `Object.freeze()` function. This allows us to create a **read-only** data structure. Thing is we actually don't really need it to be immutable, we just need to warn the reader of the code that the object that will be passed to a function won't be mutated. 
+
+
+
+#### Fatal crash vs sneaky mutation
+
+What we actually is an error that would break the app. If a frozen object is being mutated, it will create a fatal error and the code will crash, forcing a developer to fix it. If it was a sneaky mutation, it could take ages to find where this mutation occured
+
+
+
+### Read-only data structures
+
+Read only data structures are data structures that **never** need to be mutated
+
+As a functionnal programmer, every time you get a value passed in your function, you always should assume that this data shouldn't be mutated.
